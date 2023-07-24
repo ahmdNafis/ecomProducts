@@ -2,6 +2,13 @@
 
 namespace App\Models;
 
+
+use App\Models\Role;
+use App\Models\Shipping;
+use App\Models\Review;
+use App\Models\Message;
+use App\Models\Order;
+
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -24,9 +31,15 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'full_name',
         'email',
         'password',
+        'isActive', 
+        'cellphone',
+        'address', 
+        'city',
+        'country',
+        'role_id',
     ];
 
     /**
@@ -58,4 +71,24 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function reviews() {
+        return $this->hasMany(Review::class, 'user_id');
+    }
+
+    public function shipping() {
+        return $this->hasOne(Shipping::class, 'user_id');
+    }
+
+    public function role() {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    public function orders() {
+        return $this->hasMany(Order::class, 'user_id');
+    }
+
+    public function messages() {
+        return $this->hasMany(Message::class, 'user_id');
+    }
 }
