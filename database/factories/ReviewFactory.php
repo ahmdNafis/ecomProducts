@@ -22,9 +22,9 @@ class ReviewFactory extends Factory
         return [
             'review_title' => fake()->words(6, true),
             'review_body' => fake()->sentences(3, true),
-            'review_star' => fake()->randomBetween(1, 5),
-            'product_id' => rand(1, Product::get()->last()->id),
-            'user_id' => rand(1, User::get()->last()->id),
+            'review_star' => rand(1, 5),
+            'product_id' => rand(Product::first()->id, Product::get()->last()->id),
+            'user_id' => rand(User::first()->id, User::get()->last()->id),
         ];
     }
 }

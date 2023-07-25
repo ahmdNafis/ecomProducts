@@ -2,17 +2,18 @@
 
 namespace Database\Seeders;
 
-Use App\Models\User;
+use App\Models\Shipping;
+use App\Models\ShippingRate;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class UserSeeder extends Seeder
+class ShippingRateSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        User::factory(10)->create();
+        ShippingRate::factory(7)->create();
     }
 }

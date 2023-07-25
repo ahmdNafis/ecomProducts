@@ -16,6 +16,15 @@ class DatabaseSeeder extends Seeder
         ProductSeeder::class,
         SizeSeeder::class,
         ReviewSeeder::class,
+        UserSeeder::class,
+        ShippingRateSeeder::class,
+        PolicyTypeSeeder::class,
+        PolicySeeder::class,
+        MessageTypeSeeder::class,
+        MessageSeeder::class,
+        Shipping::class,
+        CompanyProfileSeeder::class,
+        DiscountSeeder::class,
         // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([

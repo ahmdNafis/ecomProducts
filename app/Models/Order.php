@@ -14,7 +14,7 @@ class Order extends Model
     use HasFactory;
 
     protected $table = 'orders';
-    protected $fillable = ['id', 'order_created', 'order_code', 'grand_total', 'total_quantity', 'note', 'payment_method', 'shipping_rate_id', 'user_id'];
+    protected $fillable = ['id', 'order_created', 'order_code', 'grand_total', 'total_quantity', 'note', 'payment_method', 'shipping_rate_id', 'user_id', 'paid'];
 
     public function shippingRate() {
         return $this->belongsTo(ShippingRate::class, 'shipping_rate_id');
