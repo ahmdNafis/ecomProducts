@@ -18,7 +18,11 @@ class ProductTypeController extends Controller
         $this->type = $pt;
     }
 
-    public function index()
+    public function index() {
+        return Inertia::render('ProductType/TypeIndex');
+    }
+
+    public function fetchProductTypes()
     {
         $types = $this->type->orderBy('id', 'desc')->get();
         $columns = collect(['id', 'type_name', 'type_active', 'type_weight']);

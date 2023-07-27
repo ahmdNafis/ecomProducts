@@ -25,7 +25,13 @@ $app = new Illuminate\Foundation\Application(
 | incoming requests to this application from both the web and CLI.
 |
 */
+$app->configure('lighthouse');
 
+$app->register(\Nuwave\Lighthouse\LighthouseServiceProvider::class);
+
+$app->register(\Nuwave\Lighthouse\Pagination\PaginationServiceProvider::class);
+$app->register(\Nuwave\Lighthouse\Validation\ValidationServiceProvider::class);
+$app->register(MLL\GraphiQL\GraphiQLServiceProvider::class);
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
     App\Http\Kernel::class

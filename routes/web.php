@@ -18,7 +18,9 @@ use App\Http\Controllers\ProductTypeController;
 |
 */
 
-Route::get('/fetchTypes', [ProductTypeController::class, 'index'])->name('product.types');
+Route::get('/index', [ProductTypeController::class, 'index'])->name('product.types');
+
+Route::post('/fetchTypes', [ProductTypeController::class, 'fetchProductTypes']);
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
