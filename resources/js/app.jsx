@@ -6,14 +6,11 @@ import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ApiProvider } from '@reduxjs/toolkit/dist/query/react';
 import { apiSlice } from './Pages/features/api/apiSlice';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
-const client = new ApolloClient({
-    uri: 'http://localhost/',
-    cache: new InMemoryCache(),
-})
+const appName = import.meta.env.VITE_APP_NAME || 'Ecommerce';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const client = new QueryClient()
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -22,11 +19,11 @@ createInertiaApp({
         const root = createRoot(el);
 
         root.render(
-            <ApolloProvider client={client}>
+            
                 <ApiProvider api={apiSlice}>
                     <App {...props} />
                 </ApiProvider>
-            </ApolloProvider>
+            
         );
     },
     progress: {

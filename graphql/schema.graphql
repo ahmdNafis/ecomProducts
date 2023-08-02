@@ -1,41 +1,193 @@
-"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
 scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
-"Indicates what fields are available at the top level of a query operation."
-type Query {
-    "Find a single user by an identifying attribute."
-    user(
-      "Search by primary key."
-      id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"])
+type ProductType {
+  id: ID! 
+  type_name: String!
+  type_active: Boolean!
+  type_weight: Int!
+  type_description: String
 
-      "Search by email address."
-      email: String @eq @rules(apply: ["prohibits:id", "required_without:id", "email"])
-    ): User @find
-
-    "List multiple users."
-    users(
-      "Filters by name. Accepts SQL LIKE wildcards `%` and `_`."
-      name: String @where(operator: "like")
-    ): [User!]! @paginate(defaultCount: 10)
+  products: [Product!]! @hasMany
+  discount: Discount @morphOne
 }
 
-"Account of a person who utilizes this application."
+type Product {
+  id: ID!
+  product_title: String! 
+  product_code: String!
+  product_slug: String
+  product_price: Float!
+  product_available: Boolean!
+  product_featured: Int
+  has_sizes: Boolean!
+  product_images: String
+  created_at: DateTime
+  updated_at: DateTime
+
+  product_type: ProductType! @belongsTo
+  sizes: [Size!]! @belongsToMany
+  reviews: [Review!]! @hasMany
+  orders: [Order!]! @belongsToMany
+  discount: Discount @morphOne
+}
+
+type Size {
+  id: ID!
+  sizes: String!
+  
+  products: [Product!]! @belongsToMany
+}
+
+enum ReviewStar {
+  EXCELLENT @enum(value: "5")
+  VERY GOOD @enum(value: "4")
+  GOOD  @enum(value: "3")
+  SATISFIED @enum(value: "2")
+  DISPLEASED @enum(value: "1")
+}
+
+type Review {
+  id: ID!
+  review_title: String!
+  review_body: String
+  review_star: ReviewStar!
+  
+  product: Product! @belongsTo
+  user: User! @belongsTo
+}
+
+scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
+
+enum PaymentMethods {
+  CASHONDELIVER @enum(value: "cash_on_delivery")
+  CARDTRANSFER @enum(value: "card_transfer")
+  MOBILETRANSFER @enum(value: "mobile_transfer")
+  ONLINEPAYMENT @enum(value: "online_payment")
+}
+
+type Order {
+  id: ID!
+  order_created: Date!
+  order_code: String!
+  grand_total: Float!
+  total_quantity: Int!
+  note: String
+  payment_method: PaymentMethods
+
+  shippingRate: ShippingRate @belongsTo
+  products: [Product!]! @belongsToMany
+}
+
+type ShippingRate {
+  id: ID!
+  shipping_location: String!
+  flat_rate: Int!
+
+  orders: [Order!]! @hasMany
+}
+
+union Discountable = Product | ProductType
+
+enum DiscountType {
+  PERCENT @enum(value: "percent")
+  AMOUNT @enum(value: "amount")
+}
+
+type Discount {
+  id: ID!
+  discount_type: DiscountType!
+  discountable: Discountable! @morphTo
+}
+
+type PolicyType {
+  id: ID!
+  policy_type_title: String!
+  policy_type_description: String
+  policy_type_active: Boolean!
+
+  policies: [Policy!]! @hasMany
+}
+
+type Policy {
+  id: ID!
+  policy_title: String!
+  policy_body: String!
+  policy_enabled: Boolean!
+
+  policy_type: PolicyType! @belongsTo
+}
+
+type MessageType {
+  id: ID!
+  message_type_title: String!
+  message_type_enabled: Boolean!
+
+  messages: [Message!]! @hasMany
+}
+
+type Message {
+  id: ID!
+  message_title: String!
+  message_body: String!
+
+  message_type: MessageType! @belongsTo
+  user: User! @belongsTo
+}
+
+type Shipping {
+  id: ID!
+  shipping_address: String!
+  billing_address: String
+
+  user: User! @belongsTo
+}
+
 type User {
-    "Unique primary key."
-    id: ID!
+  id: ID!
+  full_name: String!
+  isActive: Boolean!
+  cellphone: String
+  address: String
+  city: String
+  country: String
+  
+  role: Role! @belongsTo
+  messages: [Message!]! @hasMany
+  orders: [Order!]! @hasMany
+  shipping: Shipping! @hasOne
+  reviews: [Review!]! @hasMany
+}
 
-    "Non-unique name."
-    name: String!
+type Role {
+  id: ID!
+  role_title: String!
+  role_activity: Boolean!
+  role_permissions: String
 
-    "Unique email address."
-    email: String!
+  users: [User!]! @hasMany
+}
 
-    "When the email was verified."
-    email_verified_at: DateTime
+enum ProductOrdering {
+  ID
+  CREATED_AT
+  UPDATED_AT
+}
 
-    "When the account was created."
-    created_at: DateTime!
-
-    "When the account was last updated."
-    updated_at: DateTime!
+type Query {
+  productTypes: [ProductType!]! @all
+  productType(id: Int! @eq, type_name: String): ProductType @find
+  products: [Product!]! @all @orderBy(column: "id" direction: "DESC")
+  product(id: Int! @eq, product_title: String): Product @find
+  sizes: [Size!]! @all
+  reviews: [Review!]! @all
+  shippingRates: [ShippingRate!]! @all
+  discounts: [Discount!]! @all
+  orders: [Order!]! @all
+  policyTypes: [PolicyType!]! @all
+  policies: [Policy!]! @all
+  messageTypes: [MessageType!]! @all
+  messages: [Message!]! @all
+  shipping: [Shipping!]! @all
+  users: [User!]! @all
+  roles: [Role!]! @all
 }
