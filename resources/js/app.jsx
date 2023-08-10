@@ -19,11 +19,11 @@ createInertiaApp({
         const root = createRoot(el);
 
         root.render(
-            
+            <QueryClientProvider client={client} >
                 <ApiProvider api={apiSlice}>
                     <App {...props} />
                 </ApiProvider>
-            
+            </QueryClientProvider>
         );
     },
     progress: {

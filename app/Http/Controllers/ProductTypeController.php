@@ -22,23 +22,12 @@ class ProductTypeController extends Controller
         return Inertia::render('ProductType/TypeIndex');
     }
 
-    public function fetchProductTypes()
-    {
-        $types = $this->type->orderBy('id', 'desc')->get();
-        $columns = collect(['id', 'type_name', 'type_active', 'type_weight']);
-
-        return response()->json([
-            'columns' => $columns,
-            'types' => $types,
-        ]);
-    }
-
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        return Inertia::render('ProductType/NewTypeIndex');
     }
 
     /**

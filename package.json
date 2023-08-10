@@ -30,6 +30,7 @@
         "@rtk-query/graphql-request-base-query": "^2.2.0",
         "esbuild-linux-64": "^0.15.18",
         "graphql": "^16.7.1",
+        "graphql-request": "^6.1.0",
         "react-query": "^3.39.3",
         "react-redux": "^8.1.1"
     }

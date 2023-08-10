@@ -63,12 +63,14 @@ export const apiSlice = createApi({
                         }
                     }
                 `
-            })
+            }),
+            transformResponse: (res) => res.productType,
+            providesTags: ["ProductTypes"],
         })
     })
 })
 
 export const {
     useGetProductTypesQuery,
-    useGetProductTypeQuery,
+    useLazyGetProductTypeQuery,
 } = apiSlice
