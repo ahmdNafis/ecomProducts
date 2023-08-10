@@ -66,6 +66,22 @@ export const apiSlice = createApi({
             }),
             transformResponse: (res) => res.productType,
             providesTags: ["ProductTypes"],
+        }),
+        addProductType: builder.mutation({
+            query: initialType => ({
+                body: gql`
+                    mutation NewProducType {
+                        createProductType(input: {
+                            type_name: ${initialType.type_name}
+                            type_active: true
+                            type_description: ${initialType.type_description}
+                        }) {
+                            id
+                            type_name
+                        }
+                    }
+                `
+            })
         })
     })
 })

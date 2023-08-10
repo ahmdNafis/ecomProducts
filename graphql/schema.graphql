@@ -191,3 +191,27 @@ type Query {
   users: [User!]! @all
   roles: [Role!]! @all
 }
+
+type Mutation {
+  createProductType(input: NewProductType! @spread): ProductType @create
+}
+
+input NewProductType {
+  type_name: String!
+  type_active: Boolean!
+  type_description: String
+  products: CreateProductsHasMany
+}
+
+input CreateProductsHasMany {
+  create: [CreateProductInput!]
+}
+
+input CreateProductInput {
+  product_title: String!
+  product_price: Float!
+  product_code: String!
+  product_featured: Int
+  product_available: Boolean!
+  has_sizes: Boolean!
+}

@@ -20,7 +20,7 @@ use App\Http\Controllers\ProductTypeController;
 
 Route::get('/indexType', [ProductTypeController::class, 'index'])->name('product.types');
 Route::get('/newProductType', [ProductTypeController::class, 'create'])->name('product.type.new');
-Route::get('/showType', [ProdutTypeController::class, 'show'])->name('product.type.show');
+
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
