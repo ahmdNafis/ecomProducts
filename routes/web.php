@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Response;
 
 use App\Http\Controllers\ProductTypeController;
 
@@ -17,9 +18,13 @@ use App\Http\Controllers\ProductTypeController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/getToken', function () {
+    return Response::json(['csrf_token' => csrf_token()]);
+});
 
 Route::get('/indexType', [ProductTypeController::class, 'index'])->name('product.types');
 Route::get('/newProductType', [ProductTypeController::class, 'create'])->name('product.type.new');
+Route::post('/newType', [ProductTypeController::class, 'store'])->name('product.type.store');
 
 
 Route::get('/', function () {

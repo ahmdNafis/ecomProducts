@@ -35,7 +35,8 @@ class ProductTypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $req = $request->all();
+        dd($req);
     }
 
     /**

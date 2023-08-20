@@ -194,10 +194,21 @@ type Query {
 
 type Mutation {
   createProductType(input: NewProductType! @spread): ProductType @create
+  updateProductType(input: UpdateProductType! @spread): ProductType @update
+  activateProductType(type_active: Boolean!): ProductType @update
+  deleteProductType(id: ID! @whereKey): ProductType! @delete
+}
+
+input UpdateProductType {
+  id: ID!
+  type_name: String
+  type_weight: Int
+  type_description: String
 }
 
 input NewProductType {
   type_name: String!
+  type_weight: Int
   type_active: Boolean!
   type_description: String
   products: CreateProductsHasMany

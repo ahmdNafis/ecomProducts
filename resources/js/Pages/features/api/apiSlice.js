@@ -1,34 +1,41 @@
 import { createApi } from "@reduxjs/toolkit/query/react"; 
-import { request, gql, ClientError } from 'graphql-request';
+//import { request, gql, ClientError } from 'graphql-request';
+import {client} from '../../../client';
 
-const graphqlBaseQuery =
-  ({ baseUrl }) =>
-  async ({ body }) => {
-    try {
-      const result = await request(baseUrl, body)
-      return { data: result }
-    } catch (error) {
-      if (error instanceof ClientError) {
-        return { error: { status: error.response.status, data: error } }
-      }
-      return { error: { status: 500, data: error } }
-    }
-  }
+// const graphqlBaseQuery =
+//   ({ baseUrl }) =>
+//   async ({ body }) => {
+//     try {
+//       const result = await request(baseUrl, body)
+//       return { data: result }
+//     } catch (error) {
+//       if (error instanceof ClientError) {
+//         return { error: { status: error.response.status, data: error } }
+//       }
+//       return { error: { status: 500, data: error } }
+//     }
+//   }
 
+const client = new ApolloClient({
+    uri: 'http://localhost/graphql',
+    cache: new InMemoryCache(),
+})
+Na\1nadie3?
 export const apiSlice = createApi({
-    baseQuery: graphqlBaseQuery({ 
-        baseUrl: "http://localhost/graphql",
-        prepareHeaders: (headers, { getState }) => {
-            const csrfToken = getState().api.queries.csrfToken;
-            headers.set('x-csrf-token', csrfToken);
-            return headers;
-        },
-    }),
+    // baseQuery: graphqlBaseQuery({ 
+    //     baseUrl: "http://localhost/graphql",
+    //     prepareHeaders: (headers, { getState }) => {
+    //         const csrfToken = getState().api.queries.csrfToken;
+    //         headers.set('x-csrf-token', csrfToken);
+    //         return headers;
+    //     },
+    // }),
+    baseQuery: (arg) => client.query(arg),
     tagTypes: ["ProductTypes"],
     endpoints: (builder) => ({
         getProductTypes: builder.query({
             query: () => ({
-                body: gql`
+                query: `
                     query GetProductTypes {
                         productTypes {
                             id
@@ -48,7 +55,7 @@ export const apiSlice = createApi({
         }),
         getProductType: builder.query({
             query: (id) => ({
-                body: gql`
+                query: `
                     query GetProductType {
                         productType(id: ${id}) {
                             id
@@ -68,20 +75,21 @@ export const apiSlice = createApi({
             providesTags: ["ProductTypes"],
         }),
         addProductType: builder.mutation({
-            query: initialType => ({
-                body: gql`
-                    mutation NewProducType {
-                        createProductType(input: {
-                            type_name: ${initialType.type_name}
-                            type_active: true
-                            type_description: ${initialType.type_description}
-                        }) {
+            query: (initialType) => ({            
+                query: `
+                    mutation newProductType($input: NewProductType!) {
+                        createProductType(input: $input) {
                             id
                             type_name
                         }
                     }
-                `
-            })
+                `,
+                variables: {
+                    input: initialType
+                },
+            }),
+            transformResponse: res => res.data,
+            invalidatesTags: ['ProductTypes'],
         })
     })
 })
@@ -89,4 +97,5 @@ export const apiSlice = createApi({
 export const {
     useGetProductTypesQuery,
     useLazyGetProductTypeQuery,
+    useAddProductTypeMutation,
 } = apiSlice
